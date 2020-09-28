@@ -23,6 +23,14 @@ namespace bo.boomsecret.Common
 
             return encrypted;
         }
+        public static string GetEncryptedStringNEW(string email, string secret)
+        {
+            string encrypted = null;
+            string tobeencrypted = (email + "|" + BoomEncryptor.GetUnixTimeNow().ToString());
+            encrypted = BoomEncryptor.EncryptNEW(tobeencrypted, secret, _salt);
+
+            return encrypted;
+        }
 
         public static long GetUnixTimeNow()
         {
@@ -45,6 +53,36 @@ namespace bo.boomsecret.Common
             int ivSize = 16;
             byte[] ivBytes = null;
             string iv = InitialisationVectorHelper.CreateInitialisationVextorStringWithOpenSSL(ivSize, out ivBytes, _encoding);
+            // Verschlüsseln
+            string encrypted = EncryptHelper.EncryptWithOpenSSLCrypt(plain, hashBytes, ivBytes, _encoding);
+
+            string ciphertext = iv + encrypted;
+            // HMAC erzeugen
+            string hmac = HmacHelper.HashHmacWithOpenSSLSHA256(ciphertext, hashBytes, _encoding);
+
+
+
+            //zusammenfügen dann zu hex umwandeln und fertig
+            byte[] resultBytes = _encoding.GetBytes(hmac + ciphertext);
+            result = HexHelper.GetHexFromBytes(resultBytes);
+
+            return result;
+        }
+        public static string EncryptNEW(string plain, string sectret, string salt)
+        {
+            string result = null;
+            //Schlüssel für crypt und hmac erzeugen
+            byte[] hashBytes = null;
+            string hash = Hashhelper.Hash((sectret + salt), out hashBytes, _encoding);
+
+
+            // IV erzeugen 16 bytes lang
+            int ivSize = 16;
+            byte[] ivBytes = null;
+            string iv = InitialisationVectorHelper.CreateInitialisationVextorStringWithOpenSSL(ivSize, out ivBytes, _encoding);
+            byte[] ivBytesNEW = null;
+            string ivNEW = InitialisationVectorHelper.CreateInitialisationVextorStringNEW(ivSize, out ivBytesNEW, _encoding);
+
             // Verschlüsseln
             string encrypted = EncryptHelper.EncryptWithOpenSSLCrypt(plain, hashBytes, ivBytes, _encoding);
 

@@ -35,7 +35,6 @@ namespace bo.boomsecret.Common
             }
             catch (Exception exception)
             {
-                var bbb = "bbb";
                 try
                 {
                     TraceHelper.TraceException("D7B1FC61_D70A_4A08_9235_0236C3904065", exception);

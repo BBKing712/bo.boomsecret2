@@ -43,6 +43,7 @@ namespace bo.boomsecret.Console
 
 
             string encrypted = BoomEncryptor.GetEncryptedString(email1, _key);
+            string encrypted2 = BoomEncryptor.GetEncryptedStringNEW(email1, _key);
             string boomServer = "https://boom.dev.enapt.de";
             string boomserverLogin = (boomServer + "/login?s=");
             string completeLink = boomserverLogin + encrypted;
