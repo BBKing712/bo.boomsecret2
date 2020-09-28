@@ -18,6 +18,17 @@ namespace bo.boomsecret.Common
             }
 
         }
+        public static string HashHmacNEW(string encrypted, byte[] keyBytes, Encoding encoding)
+        {
+            using (HMACSHA256 hmacsha256 = new HMACSHA256(keyBytes))
+            {
+                hmacsha256.ComputeHash(encoding.GetBytes(encrypted));
+
+                return string.Concat(Array.ConvertAll(hmacsha256.Hash, b => b.ToString("X2"))).ToLower();
+
+            }
+
+        }
 
     }
 }

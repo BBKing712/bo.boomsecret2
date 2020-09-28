@@ -93,7 +93,7 @@ namespace bo.boomsecret.Common
             // HMAC erzeugen
             string hmac = HmacHelper.HashHmacWithOpenSSLSHA256(ciphertext, hashBytes, _encoding);
             //TODO BK  avoid OpenSSL
-            string hmacNEW   = HmacHelper.HashHmacWithOpenSSLSHA256(ciphertextNEW, hashBytes, _encoding);
+            string hmacNEW   = HmacHelper.HashHmacNEW(ciphertextNEW, hashBytes, _encoding);
 
 
 
