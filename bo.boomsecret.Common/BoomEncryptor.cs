@@ -71,6 +71,7 @@ namespace bo.boomsecret.Common
         public static string EncryptNEW(string plain, string sectret, string salt)
         {
             string result = null;
+            string resultNEW = null;
             //Schlüssel für crypt und hmac erzeugen
             byte[] hashBytes = null;
             string hash = Hashhelper.Hash((sectret + salt), out hashBytes, _encoding);
@@ -85,18 +86,24 @@ namespace bo.boomsecret.Common
 
             // Verschlüsseln
             string encrypted = EncryptHelper.EncryptWithOpenSSLCrypt(plain, hashBytes, ivBytes, _encoding);
+            string encryptedNEW = EncryptHelper.EncryptNEW(plain, hashBytes, ivBytesNEW, _encoding);
 
             string ciphertext = iv + encrypted;
+            string ciphertextNEW = ivNEW + encryptedNEW;
             // HMAC erzeugen
             string hmac = HmacHelper.HashHmacWithOpenSSLSHA256(ciphertext, hashBytes, _encoding);
+            //TODO BK  avoid OpenSSL
+            string hmacNEW   = HmacHelper.HashHmacWithOpenSSLSHA256(ciphertextNEW, hashBytes, _encoding);
 
 
 
             //zusammenfügen dann zu hex umwandeln und fertig
             byte[] resultBytes = _encoding.GetBytes(hmac + ciphertext);
+            byte[] resultBytesNEW = _encoding.GetBytes(hmacNEW + ciphertextNEW);
             result = HexHelper.GetHexFromBytes(resultBytes);
+            resultNEW = HexHelper.GetHexFromBytes(resultBytesNEW);
 
-            return result;
+            return resultNEW;
         }
 
 

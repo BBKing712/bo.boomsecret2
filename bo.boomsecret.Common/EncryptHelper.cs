@@ -21,6 +21,40 @@ namespace bo.boomsecret.Common
             encrypted = encoding.GetString(encryptedBytes);
             return encrypted;
         }
+        public static string EncryptNEW(string plainText, byte[] hashBytes, byte[] ivBytes, Encoding encoding)
+        {
+            byte[] encryptedBytes;
+            string encrypted = null;
+                        using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
+            {
+                aesAlg.Key = hashBytes;
+                aesAlg.IV = ivBytes;
+                // Create an encryptor to perform the stream transform.
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption.
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data to the stream.
+                            swEncrypt.Write(plainText);
+                        }
+                        encryptedBytes = msEncrypt.ToArray();
+                    }
+                }
+
+
+
+            }
+
+            CipherContext aes = new CipherContext(Cipher.AES_256_CBC);
+            byte[] plainTextBytes = encoding.GetBytes(plainText);
+            encrypted = encoding.GetString(encryptedBytes);
+            return encrypted;
+        }
 
 
 
